@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  Node1:
+    image: indy-node-v1.13.2
+    container_name: Node1
+    networks:
+      - indy_network
+    command: >
+      /bin/bash -c "generate_indy_pool_transactions --nodes 4 --clients 5 --nodeNum 1 --ips '${NODE_IPS}' &&
+                    cp /var/lib/indy/sandbox/pool_transactions_genesis /mnt/pool_transactions_genesis &&
+                    start_indy_node Node1 0.0.0.0 9701 0.0.0.0 9702"
+    ports:
+      - "9701:9701"
+      - "9702:9702"
+    volumes:
+      - ./pool_transactions_genesis:/mnt/pool_transactions_genesis
+      - ./node1_metrics_db:/var/lib/indy/sandbox/data/Node1/metrics_db
+
+  Node2:
+    image: indy-node-v1.13.2
+    container_name: Node2
+    networks:
+      - indy_network
+    command: >
+      /bin/bash -c "generate_indy_pool_transactions --nodes 4 --clients 5 --nodeNum 2 --ips '${NODE_IPS}' &&
+                    start_indy_node Node2 0.0.0.0 9703 0.0.0.0 9704"
+    ports:
+      - "9703:9703"
+      - "9704:9704"
+    volumes:
+      - ./node2_metrics_db:/var/lib/indy/sandbox/data/Node2/metrics_db
+
+  Node3:
+    image: indy-node-v1.13.2
+    container_name: Node3
+    networks:
+      - indy_network
+    command: >
+      /bin/bash -c "generate_indy_pool_transactions --nodes 4 --clients 5 --nodeNum 3 --ips '${NODE_IPS}' &&
+                    start_indy_node Node3 0.0.0.0 9705 0.0.0.0 9706"
+    ports:
+      - "9705:9705"
+      - "9706:9706"
+    volumes:
+      - ./node3_metrics_db:/var/lib/indy/sandbox/data/Node3/metrics_db
+
+  Node4:
+    image: indy-node-v1.13.2
+    container_name: Node4
+    networks:
+      - indy_network
+    command: >
+      /bin/bash -c "generate_indy_pool_transactions --nodes 4 --clients 5 --nodeNum 4 --ips '${NODE_IPS}' &&
+                    start_indy_node Node4 0.0.0.0 9707 0.0.0.0 9708"
+    ports:
+      - "9707:9707"
+      - "9708:9708"
+    volumes:
+      - ./node4_metrics_db:/var/lib/indy/sandbox/data/Node4/metrics_db
+
+networks:
+  indy_network:
+    driver: bridge
